@@ -50,3 +50,11 @@ Build an internal AI platform that helps retail teams:
   - `GET /api/v1/ops/revenue-by-store`
   - `GET /api/v1/ops/top-skus`
 
+## Step 3 deliverables
+- Safe SQL endpoint: `POST /api/v1/ops/safe-sql`
+- Guardrails:
+  - only `SELECT`
+  - deny DDL/DML keywords
+  - allowlist of source tables
+  - enforced result row limit
+

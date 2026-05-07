@@ -1,195 +1,51 @@
 # AI Retail Copilot Platform
 
-Backend-first pet-проєкт AI Developer у ритейлі.
+## Назва проєкту
+AI Retail Copilot Platform
 
-## Мета
-Побудувати внутрішню AI-платформу, яка допомагає retail-командам:
-- відповідати на операційні та аналітичні питання через LLM,
-- безпечно працювати з PostgreSQL через перевірені SQL-потоки,
-- зменшувати галюцинації через retrieval і валідаційні шари,
-- стабільно працювати в Docker та Kubernetes.
+## Це мій пет проєкт про...
+Це мій пет проєкт про AI-помічника для ритейлу: аналітика через LLM, NL-to-SQL, RAG та контроль галюцинацій.
 
-## Заплановані модулі
-- `backend/app/api` - REST ендпоінти
-- `backend/app/core` - конфігурація та спільні налаштування
-- `backend/app/services` - LLM, SQL, RAG, guardrails
-- `backend/app/db` - інтеграція з PostgreSQL
-- `backend/app/observability` - логи, метрики, hooks для трасування
-- `docs/` - архітектура та runbook
-- `infra/` - docker і k8s маніфести
-
-## Стек (цільовий)
+## Технологічний стек
 - Python, FastAPI, asyncio
 - PostgreSQL + SQLAlchemy
-- OpenAI/Claude-compatible адаптери
-- Redis (cache/queue)
-- Docker Compose + Kubernetes
-- Prometheus метрики + structured logs
+- Redis
+- OpenAI/Claude-compatible інтеграції
+- Docker Compose, Kubernetes
+- GitHub Actions, GitLab CI
 
-## Roadmap
-1. FastAPI scaffold + config + health ендпоінти
-2. PostgreSQL схема + seed + аналітичні SQL-запити
-3. Шар безпечного виконання SQL + guardrails
-4. LLM адаптери + prompt templates
-5. NL-to-SQL ендпоінт + summarization
-6. RAG шар + цитати
-7. Перевірки галюцинацій + confidence scoring
-8. Docker + docker-compose стек
-9. Kubernetes маніфести
-10. Observability (метрики/логування)
-11. Тести (unit + integration + smoke)
-12. CI/CD (GitHub Actions + gitlab-ci)
-13. Полірування документації та runbook
+## Що реалізовано
+- Аналітичні ендпоінти по продажам.
+- Безпечне виконання SQL з guardrails.
+- LLM промптинг і multi-provider порівняння.
+- NL-to-SQL та RAG з цитуванням джерел.
+- Hallucination guard і quality gate у CI.
 
-## Крок 2 (готово)
-- Async-шар PostgreSQL (`SQLAlchemy + asyncpg`)
-- Схема продажів/позицій замовлень для retail-аналітики
-- Seed-скрипт: `python scripts/seed_postgres.py`
-- Аналітичні ендпоінти:
-  - `GET /api/v1/ops/revenue-by-store`
-  - `GET /api/v1/ops/top-skus`
+## Структура
+- `backend/app/api` — API ендпоінти
+- `backend/app/services` — LLM/SQL/RAG сервіси
+- `backend/app/db` — робота з PostgreSQL/Redis
+- `scripts/` — seed, load-smoke, eval утиліти
+- `infra/` — docker/k8s маніфести
 
-## Крок 3 (готово)
-- Ендпоінт безпечного SQL: `POST /api/v1/ops/safe-sql`
-- Guardrails:
-  - лише `SELECT`
-  - заборона DDL/DML ключових слів
-  - allowlist таблиць-джерел
-  - примусове обмеження кількості рядків
+## Архітектура
+- API отримує бізнес-запит і маршрутизує в NL-to-SQL або RAG.
+- SQL guard перевіряє запити перед виконанням.
+- LLM сервіс генерує бізнес-відповіді, guard оцінює ризики.
+- Метрики і логи відстежують стабільність та якість.
 
-## Крок 4 (готово)
-- LLM адаптери:
-  - OpenAI-compatible chat completions
-  - Claude messages API
-  - mock provider fallback
-- Prompt templates для retail analyst задач
-- Ендпоінт: `POST /api/v1/ops/prompt/run`
+## Що потрібно встановити для тесту
+- Python 3.12+
+- Docker Desktop
+- (опційно) kubectl + локальний k8s
 
-## Крок 5 (готово)
-- NL-to-SQL потік:
-  - питання -> deterministic SQL translation
-  - валідація SQL guardrails
-  - безпечне read-only виконання
-  - LLM-підсумок для бізнесу
-- Ендпоінт: `POST /api/v1/ops/nl-sql`
-
-## Крок 6 (готово)
-- Локальний RAG retrieval над внутрішніми retail knowledge snippets
-- Ендпоінт відповіді з цитатами: `POST /api/v1/ops/rag/answer`
-- Метадані джерел у відповіді (`source_id`, title, snippet)
-
-## Крок 7 (готово)
-- Перевірки галюцинацій для NL-SQL і RAG результатів
-- Confidence і grounding scores у відповідях API
-- Прапорці ризику (`low`, `medium`, `high`) з warning-повідомленнями
-
-## Крок 8 (готово)
-- `backend/Dockerfile` для API контейнера
-- `docker-compose.yml` стек:
-  - `api`
-  - `postgres`
-  - `redis`
-- `.env.example` для локального налаштування середовища
-
-## Запуск через Docker
+## Як запустити
 ```bash
 docker compose up --build
 ```
-
-## Швидкі перевірки
-- `GET /api/v1/health`
-- `GET /api/v1/ready`
-- `GET /api/v1/ops/revenue-by-store`
-- `POST /api/v1/ops/nl-sql`
-
-## Крок 9 (готово)
-- Kubernetes маніфести в `infra/k8s/`:
-  - `config.yaml` (ConfigMap + Secret)
-  - `workloads.yaml` (Deployments: api, postgres, redis)
-  - `services.yaml` (ClusterIP services)
-  - `kustomization.yaml`
-
-## Запуск у Kubernetes (локальний кластер)
+Або локально:
 ```bash
-kubectl apply -k infra/k8s
-kubectl get pods
-kubectl get svc
-kubectl port-forward svc/api 8000:8000
+pip install -r requirements.txt
+python -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8000
 ```
-
-## Крок 10 (готово)
-- Structured request logging middleware
-- Ендпоінт метрик Prometheus: `GET /api/v1/metrics`
-- Метрики latency та errors для ключових ops-ендпоінтів
-
-## Крок 11 (готово)
-- Розширені API integration тести:
-  - `tests/test_system_api.py`
-  - `tests/test_safe_sql_api.py`
-- Smoke load утиліта:
-  - `python scripts/load_smoke.py --base-url http://127.0.0.1:8000 --requests 30 --concurrency 10`
-
-## Крок 12 (готово)
-- GitHub Actions pipeline: `.github/workflows/ci.yml`
-- GitLab CI pipeline: `gitlab-ci.yml`
-- Автоматичні перевірки:
-  - тести
-  - compile validation
-  - docker image build
-
-## Крок 13 (готово)
-- Полірування документації:
-  - `docs/architecture.md`
-  - `docs/runbook.md`
-  - `docs/api-examples.md`
-  - `docs/troubleshooting.md`
-
-## Крок 14 (advanced AI operations)
-- Multi-provider comparison ендпоінт:
-  - `POST /api/v1/ops/prompt/compare`
-  - порівнює відповіді `mock/openai/claude` для однієї бізнес-задачі
-- Скрипт prompt evaluation для реальних retail-сценаріїв:
-  - `python scripts/prompt_eval.py --provider mock`
-- Скрипт SQL performance tuning report (на базі PostgreSQL `EXPLAIN`):
-  - `python scripts/sql_tune_report.py`
-
-## Крок 15 (AI quality gate в CI)
-- Автоматизований скрипт LLM quality gate:
-  - `python scripts/llm_quality_gate.py --provider mock --min-avg-confidence 0.25 --max-high-risk 0`
-- Інтеграція в CI:
-  - GitHub Actions запускає gate у `.github/workflows/ci.yml`
-  - GitLab CI запускає gate у `gitlab-ci.yml`
-- Політика gate:
-  - pipeline падає, якщо середній confidence нижче порогу
-  - pipeline падає, якщо кількість high-risk сценаріїв перевищує ліміт
-
-## Індекс документації
-- Architecture: `docs/architecture.md`
-- Runbook: `docs/runbook.md`
-- API examples: `docs/api-examples.md`
-- Troubleshooting: `docs/troubleshooting.md`
-
-## Налаштування LLM провайдера
-- `LLM_PROVIDER=mock|openai|claude`
-- `LLM_API_BASE=<provider_endpoint>`
-- `LLM_API_KEY=<secret>`
-- `LLM_MODEL=<model_name>`
-- Для локальної перевірки можна залишити `mock`, щоб не залежати від зовнішнього API.
-
-## Рекомендований eval-процес перед merge
-1. Прогнати unit/integration тести.
-2. Запустити `python scripts/prompt_eval.py --provider mock`.
-3. Запустити `python scripts/llm_quality_gate.py --provider mock --min-avg-confidence 0.25 --max-high-risk 0`.
-4. Зафіксувати результат у PR-коментарі (confidence/risk summary).
-
-## Що покращувати далі
-- Додати порівняння метрик між комітами для trend-analysis.
-- Вести baseline сценаріїв як окремий eval-набір.
-- Розширити правила SQL guard для складніших аналітичних сценаріїв.
-
-## Демо-сценарій за 10 хв
-1. Запустити стек через Docker.
-2. Перевірити `health/ready/metrics`.
-3. Викликати `nl-sql` і `rag/answer` на одному бізнес-питанні.
-4. Прогнати quality gate і показати risk/confidence у відповіді.
 

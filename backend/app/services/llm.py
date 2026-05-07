@@ -6,8 +6,17 @@ from app.core.settings import settings
 
 
 class LLMService:
-    async def generate(self, prompt: str, temperature: float = 0.2) -> dict[str, Any]:
-        if settings.llm_provider == "mock":
+    async def generate(
+        self,
+        prompt: str,
+        temperature: float = 0.2,
+        provider: str | None = None,
+        model: str | None = None,
+    ) -> dict[str, Any]:
+        selected_provider = provider or settings.llm_provider
+        selected_model = model or settings.llm_model
+
+        if selected_provider == "mock":
             return {
                 "provider": "mock",
                 "model": "mock-retail-v1",
@@ -15,35 +24,39 @@ class LLMService:
                 "used_fallback": False,
             }
 
-        if settings.llm_provider == "claude":
+        if selected_provider == "claude":
             try:
-                output = await self._call_claude(prompt=prompt, temperature=temperature)
+                output = await self._call_claude(prompt=prompt, temperature=temperature, model=selected_model)
                 return {
                     "provider": "claude",
-                    "model": settings.llm_model,
+                    "model": selected_model,
                     "output": output,
                     "used_fallback": False,
                 }
             except Exception:
-                return self._fallback(prompt)
+                return self._fallback(prompt, selected_provider)
 
         try:
-            output = await self._call_openai_compatible(prompt=prompt, temperature=temperature)
+            output = await self._call_openai_compatible(
+                prompt=prompt,
+                temperature=temperature,
+                model=selected_model,
+            )
             return {
-                "provider": settings.llm_provider,
-                "model": settings.llm_model,
+                "provider": selected_provider,
+                "model": selected_model,
                 "output": output,
                 "used_fallback": False,
             }
         except Exception:
-            return self._fallback(prompt)
+            return self._fallback(prompt, selected_provider)
 
-    async def _call_openai_compatible(self, prompt: str, temperature: float) -> str:
+    async def _call_openai_compatible(self, prompt: str, temperature: float, model: str) -> str:
         if not settings.llm_api_base or not settings.llm_api_key:
             raise RuntimeError("LLM api base/key are not configured")
 
         payload = {
-            "model": settings.llm_model,
+            "model": model,
             "messages": [
                 {"role": "system", "content": "You are a concise retail analytics assistant."},
                 {"role": "user", "content": prompt},
@@ -62,12 +75,12 @@ class LLMService:
             data = response.json()
         return data["choices"][0]["message"]["content"]
 
-    async def _call_claude(self, prompt: str, temperature: float) -> str:
+    async def _call_claude(self, prompt: str, temperature: float, model: str) -> str:
         if not settings.llm_api_base or not settings.llm_api_key:
             raise RuntimeError("Claude api base/key are not configured")
 
         payload = {
-            "model": settings.llm_model,
+            "model": model,
             "max_tokens": 512,
             "temperature": temperature,
             "messages": [{"role": "user", "content": prompt}],
@@ -93,9 +106,9 @@ class LLMService:
             return str(first.get("text", ""))
         raise RuntimeError("Unexpected Claude response format")
 
-    def _fallback(self, prompt: str) -> dict[str, Any]:
+    def _fallback(self, prompt: str, provider: str) -> dict[str, Any]:
         return {
-            "provider": f"{settings.llm_provider}-fallback",
+            "provider": f"{provider}-fallback",
             "model": "mock-retail-v1",
             "output": self._mock_output(prompt),
             "used_fallback": True,

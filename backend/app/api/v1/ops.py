@@ -6,6 +6,7 @@ from fastapi import APIRouter, Query
 from app.observability.metrics import increment_error, observe_latency
 from app.repositories import RetailAnalyticsRepository, SafeSQLRepository
 from app.schemas.llm import PromptRunRequest, PromptRunResponse
+from app.schemas.llm_compare import LLMCompareItem, LLMCompareRequest, LLMCompareResponse
 from app.schemas.nl_sql import NL2SQLRequest, NL2SQLResponse
 from app.schemas.rag import Citation, RAGRequest, RAGResponse
 from app.schemas.sql_guard import SQLQueryRequest, SQLQueryResponse
@@ -87,6 +88,29 @@ async def run_prompt(payload: PromptRunRequest):
         output=str(result["output"]),
         used_fallback=bool(result["used_fallback"]),
     )
+
+
+@router.post("/prompt/compare", response_model=LLMCompareResponse)
+async def compare_prompt(payload: LLMCompareRequest):
+    prompt = retail_analyst_prompt(task=payload.task, context=payload.context)
+    results: list[LLMCompareItem] = []
+
+    for provider in payload.providers:
+        result = await LLMService().generate(
+            prompt=prompt,
+            temperature=payload.temperature,
+            provider=provider,
+        )
+        results.append(
+            LLMCompareItem(
+                provider=str(result["provider"]),
+                model=str(result["model"]),
+                output=str(result["output"]),
+                used_fallback=bool(result["used_fallback"]),
+            )
+        )
+
+    return LLMCompareResponse(prompt=prompt, results=results)
 
 
 @router.post("/nl-sql", response_model=NL2SQLResponse)

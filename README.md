@@ -145,6 +145,15 @@ kubectl port-forward svc/api 8000:8000
   - `docs/api-examples.md`
   - `docs/troubleshooting.md`
 
+## Step 14 deliverables (advanced AI operations)
+- Multi-provider comparison endpoint:
+  - `POST /api/v1/ops/prompt/compare`
+  - compares outputs from `mock/openai/claude` for the same business task
+- Prompt evaluation script for real retail scenarios:
+  - `python scripts/prompt_eval.py --provider mock`
+- SQL performance tuning report script (based on PostgreSQL `EXPLAIN`):
+  - `python scripts/sql_tune_report.py`
+
 ## Documentation index
 - Architecture: `docs/architecture.md`
 - Runbook: `docs/runbook.md`

@@ -5,9 +5,11 @@ from fastapi import APIRouter, Query
 from app.repositories import RetailAnalyticsRepository, SafeSQLRepository
 from app.schemas.llm import PromptRunRequest, PromptRunResponse
 from app.schemas.nl_sql import NL2SQLRequest, NL2SQLResponse
+from app.schemas.rag import Citation, RAGRequest, RAGResponse
 from app.schemas.sql_guard import SQLQueryRequest, SQLQueryResponse
 from app.services import LLMService, NL2SQLService, retail_analyst_prompt
 from app.services.sql_guard import SQLGuard
+from app.rag import KnowledgeRetriever
 
 router = APIRouter(prefix="/ops", tags=["ops"])
 
@@ -86,5 +88,34 @@ async def run_nl_to_sql(payload: NL2SQLRequest):
         rows=rows,
         row_count=len(rows),
         summary=str(llm_result["output"]),
+    )
+
+
+@router.post("/rag/answer", response_model=RAGResponse)
+async def rag_answer(payload: RAGRequest):
+    contexts = KnowledgeRetriever().retrieve(question=payload.question, top_k=payload.top_k)
+    context_text = "\n\n".join(
+        f"[{idx + 1}] {item['title']}: {item['text']}" for idx, item in enumerate(contexts)
+    )
+    prompt = (
+        f"Question: {payload.question}\n\n"
+        f"Knowledge context:\n{context_text}\n\n"
+        "Answer concisely, rely only on provided context, and mention key constraints."
+    )
+    llm_result = await LLMService().generate(prompt=prompt, temperature=0.1)
+
+    citations = [
+        Citation(
+            source_id=str(item["source_id"]),
+            title=str(item["title"]),
+            snippet=str(item["text"])[:220],
+        )
+        for item in contexts
+    ]
+    return RAGResponse(
+        question=payload.question,
+        answer=str(llm_result["output"]),
+        citations=citations,
+        context_count=len(citations),
     )
 

@@ -74,3 +74,8 @@ Build an internal AI platform that helps retail teams:
   - LLM-based business summary
 - Endpoint: `POST /api/v1/ops/nl-sql`
 
+## Step 6 deliverables
+- Local RAG retrieval layer over internal retail knowledge snippets
+- Citation-rich answer endpoint: `POST /api/v1/ops/rag/answer`
+- Source metadata in response (`source_id`, title, snippet)
+

@@ -169,3 +169,21 @@ kubectl port-forward svc/api 8000:8000
 - API examples: `docs/api-examples.md`
 - Troubleshooting: `docs/troubleshooting.md`
 
+## Налаштування LLM провайдера
+- `LLM_PROVIDER=mock|openai|claude`
+- `LLM_API_BASE=<provider_endpoint>`
+- `LLM_API_KEY=<secret>`
+- `LLM_MODEL=<model_name>`
+- Для локальної перевірки можна залишити `mock`, щоб не залежати від зовнішнього API.
+
+## Рекомендований eval-процес перед merge
+1. Прогнати unit/integration тести.
+2. Запустити `python scripts/prompt_eval.py --provider mock`.
+3. Запустити `python scripts/llm_quality_gate.py --provider mock --min-avg-confidence 0.25 --max-high-risk 0`.
+4. Зафіксувати результат у PR-коментарі (confidence/risk summary).
+
+## Що покращувати далі
+- Додати порівняння метрик між комітами для trend-analysis.
+- Вести baseline сценаріїв як окремий eval-набір.
+- Розширити правила SQL guard для складніших аналітичних сценаріїв.
+

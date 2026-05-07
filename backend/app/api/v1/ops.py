@@ -1,9 +1,12 @@
+import json
+
 from fastapi import APIRouter, Query
 
 from app.repositories import RetailAnalyticsRepository, SafeSQLRepository
 from app.schemas.llm import PromptRunRequest, PromptRunResponse
+from app.schemas.nl_sql import NL2SQLRequest, NL2SQLResponse
 from app.schemas.sql_guard import SQLQueryRequest, SQLQueryResponse
-from app.services import LLMService, retail_analyst_prompt
+from app.services import LLMService, NL2SQLService, retail_analyst_prompt
 from app.services.sql_guard import SQLGuard
 
 router = APIRouter(prefix="/ops", tags=["ops"])
@@ -50,5 +53,38 @@ async def run_prompt(payload: PromptRunRequest):
         prompt=prompt,
         output=str(result["output"]),
         used_fallback=bool(result["used_fallback"]),
+    )
+
+
+@router.post("/nl-sql", response_model=NL2SQLResponse)
+async def run_nl_to_sql(payload: NL2SQLRequest):
+    sql = NL2SQLService().translate(payload.question)
+    allowed, reason = SQLGuard().validate(sql)
+    if not allowed:
+        return NL2SQLResponse(
+            question=payload.question,
+            sql=sql,
+            allowed=False,
+            rows=[],
+            row_count=0,
+            summary=f"Query blocked by guardrails: {reason}",
+        )
+
+    rows = await SafeSQLRepository().execute_select(sql=sql, max_rows=payload.max_rows)
+    summary_prompt = (
+        f"User question: {payload.question}\n"
+        f"Executed SQL: {sql}\n"
+        f"Rows (json): {json.dumps(rows, ensure_ascii=True)[:6000]}\n"
+        "Provide a short business summary in 3-5 bullet points."
+    )
+    llm_result = await LLMService().generate(prompt=summary_prompt, temperature=0.1)
+
+    return NL2SQLResponse(
+        question=payload.question,
+        sql=sql,
+        allowed=True,
+        rows=rows,
+        row_count=len(rows),
+        summary=str(llm_result["output"]),
     )
 

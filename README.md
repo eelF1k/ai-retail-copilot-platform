@@ -66,3 +66,11 @@ Build an internal AI platform that helps retail teams:
 - Prompt templates for retail analyst tasks
 - Endpoint: `POST /api/v1/ops/prompt/run`
 
+## Step 5 deliverables
+- NL-to-SQL flow:
+  - question -> deterministic SQL translation
+  - SQL guardrails validation
+  - safe read-only execution
+  - LLM-based business summary
+- Endpoint: `POST /api/v1/ops/nl-sql`
+

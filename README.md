@@ -130,3 +130,11 @@ kubectl port-forward svc/api 8000:8000
 - Smoke load utility:
   - `python scripts/load_smoke.py --base-url http://127.0.0.1:8000 --requests 30 --concurrency 10`
 
+## Step 12 deliverables
+- GitHub Actions pipeline: `.github/workflows/ci.yml`
+- GitLab CI pipeline: `gitlab-ci.yml`
+- Automated checks:
+  - tests
+  - compile validation
+  - docker image build
+

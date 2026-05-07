@@ -9,6 +9,11 @@ class Settings(BaseSettings):
 
     postgres_dsn: str = "postgresql+asyncpg://app:app@localhost:5432/retail_ai"
     redis_url: str = "redis://localhost:6379/0"
+    llm_provider: str = "mock"
+    llm_api_base: str = ""
+    llm_api_key: str = ""
+    llm_model: str = "gpt-4o-mini"
+    llm_timeout_s: float = 20.0
 
     model_config = SettingsConfigDict(
         env_file=".env",

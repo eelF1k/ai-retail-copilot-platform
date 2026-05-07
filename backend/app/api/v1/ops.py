@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Query
 
 from app.repositories import RetailAnalyticsRepository, SafeSQLRepository
+from app.schemas.llm import PromptRunRequest, PromptRunResponse
 from app.schemas.sql_guard import SQLQueryRequest, SQLQueryResponse
+from app.services import LLMService, retail_analyst_prompt
 from app.services.sql_guard import SQLGuard
 
 router = APIRouter(prefix="/ops", tags=["ops"])
@@ -35,5 +37,18 @@ async def execute_safe_sql(payload: SQLQueryRequest):
         reason="ok",
         rows=rows,
         returned_rows=len(rows),
+    )
+
+
+@router.post("/prompt/run", response_model=PromptRunResponse)
+async def run_prompt(payload: PromptRunRequest):
+    prompt = retail_analyst_prompt(task=payload.task, context=payload.context)
+    result = await LLMService().generate(prompt=prompt, temperature=payload.temperature)
+    return PromptRunResponse(
+        provider=str(result["provider"]),
+        model=str(result["model"]),
+        prompt=prompt,
+        output=str(result["output"]),
+        used_fallback=bool(result["used_fallback"]),
     )
 

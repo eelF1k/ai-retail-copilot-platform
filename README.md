@@ -58,3 +58,11 @@ Build an internal AI platform that helps retail teams:
   - allowlist of source tables
   - enforced result row limit
 
+## Step 4 deliverables
+- LLM adapters:
+  - OpenAI-compatible chat completions
+  - Claude messages API
+  - mock provider fallback
+- Prompt templates for retail analyst tasks
+- Endpoint: `POST /api/v1/ops/prompt/run`
+

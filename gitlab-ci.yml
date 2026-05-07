@@ -11,6 +11,7 @@ backend_tests:
   stage: test
   script:
     - python -m pytest -q
+    - python scripts/llm_quality_gate.py --provider mock --min-avg-confidence 0.25 --max-high-risk 0
     - python -m compileall backend/app tests scripts
 
 docker_build:

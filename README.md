@@ -154,6 +154,16 @@ kubectl port-forward svc/api 8000:8000
 - SQL performance tuning report script (based on PostgreSQL `EXPLAIN`):
   - `python scripts/sql_tune_report.py`
 
+## Step 15 deliverables (AI quality gate in CI)
+- Automated LLM quality gate script:
+  - `python scripts/llm_quality_gate.py --provider mock --min-avg-confidence 0.25 --max-high-risk 0`
+- CI integration:
+  - GitHub Actions runs gate in `.github/workflows/ci.yml`
+  - GitLab CI runs gate in `gitlab-ci.yml`
+- Gate policy:
+  - fail pipeline if average confidence drops below threshold
+  - fail pipeline if high-risk hallucination scenarios exceed limit
+
 ## Documentation index
 - Architecture: `docs/architecture.md`
 - Runbook: `docs/runbook.md`

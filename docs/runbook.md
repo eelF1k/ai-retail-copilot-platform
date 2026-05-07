@@ -31,3 +31,9 @@ python scripts/seed_postgres.py
 python scripts/load_smoke.py --base-url http://127.0.0.1:8000 --requests 30 --concurrency 10
 ```
 
+## LLM quality gate
+Use this check before merge to catch regression in grounding confidence:
+```bash
+python scripts/llm_quality_gate.py --provider mock --min-avg-confidence 0.25 --max-high-risk 0
+```
+

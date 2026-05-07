@@ -23,6 +23,9 @@ jobs:
       - name: Run tests
         run: python -m pytest -q
 
+      - name: Run LLM quality gate
+        run: python scripts/llm_quality_gate.py --provider mock --min-avg-confidence 0.25 --max-high-risk 0
+
       - name: Compile check
         run: python -m compileall backend/app tests scripts
 

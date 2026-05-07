@@ -42,3 +42,11 @@ Build an internal AI platform that helps retail teams:
 12. CI/CD (GitHub Actions + gitlab-ci)
 13. Docs polish and runbook
 
+## Step 2 deliverables
+- PostgreSQL async layer (`SQLAlchemy + asyncpg`)
+- Sales/order-item schema for retail analytics
+- Seed script: `python scripts/seed_postgres.py`
+- Analytical endpoints:
+  - `GET /api/v1/ops/revenue-by-store`
+  - `GET /api/v1/ops/top-skus`
+

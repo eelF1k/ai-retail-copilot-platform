@@ -123,3 +123,10 @@ kubectl port-forward svc/api 8000:8000
 - Prometheus metrics endpoint: `GET /api/v1/metrics`
 - Latency and error metrics for key ops endpoints
 
+## Step 11 deliverables
+- Extended API integration tests:
+  - `tests/test_system_api.py`
+  - `tests/test_safe_sql_api.py`
+- Smoke load utility:
+  - `python scripts/load_smoke.py --base-url http://127.0.0.1:8000 --requests 30 --concurrency 10`
+

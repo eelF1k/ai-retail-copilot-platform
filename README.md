@@ -138,3 +138,16 @@ kubectl port-forward svc/api 8000:8000
   - compile validation
   - docker image build
 
+## Step 13 deliverables
+- Documentation polish:
+  - `docs/architecture.md`
+  - `docs/runbook.md`
+  - `docs/api-examples.md`
+  - `docs/troubleshooting.md`
+
+## Documentation index
+- Architecture: `docs/architecture.md`
+- Runbook: `docs/runbook.md`
+- API examples: `docs/api-examples.md`
+- Troubleshooting: `docs/troubleshooting.md`
+

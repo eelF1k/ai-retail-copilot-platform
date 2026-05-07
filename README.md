@@ -103,3 +103,18 @@ docker compose up --build
 - `GET /api/v1/ops/revenue-by-store`
 - `POST /api/v1/ops/nl-sql`
 
+## Step 9 deliverables
+- Kubernetes manifests in `infra/k8s/`:
+  - `config.yaml` (ConfigMap + Secret)
+  - `workloads.yaml` (Deployments: api, postgres, redis)
+  - `services.yaml` (ClusterIP services)
+  - `kustomization.yaml`
+
+## Run in Kubernetes (local cluster)
+```bash
+kubectl apply -k infra/k8s
+kubectl get pods
+kubectl get svc
+kubectl port-forward svc/api 8000:8000
+```
+

@@ -118,3 +118,8 @@ kubectl get svc
 kubectl port-forward svc/api 8000:8000
 ```
 
+## Step 10 deliverables
+- Structured request logging middleware
+- Prometheus metrics endpoint: `GET /api/v1/metrics`
+- Latency and error metrics for key ops endpoints
+

@@ -1,6 +1,6 @@
 # AI Retail Copilot Platform
 
-Backend-first pet-проєкт під роль AI Developer у ритейлі.
+Backend-first pet-проєкт AI Developer у ритейлі.
 
 ## Мета
 Побудувати внутрішню AI-платформу, яка допомагає retail-командам:
@@ -26,8 +26,7 @@ Backend-first pet-проєкт під роль AI Developer у ритейлі.
 - Docker Compose + Kubernetes
 - Prometheus метрики + structured logs
 
-## Roadmap (коміт за комітом)
-0. Ініціалізація репозиторію та каркасу архітектури
+## Roadmap
 1. FastAPI scaffold + config + health ендпоінти
 2. PostgreSQL схема + seed + аналітичні SQL-запити
 3. Шар безпечного виконання SQL + guardrails

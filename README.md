@@ -187,3 +187,9 @@ kubectl port-forward svc/api 8000:8000
 - Вести baseline сценаріїв як окремий eval-набір.
 - Розширити правила SQL guard для складніших аналітичних сценаріїв.
 
+## Демо-сценарій за 10 хв
+1. Запустити стек через Docker.
+2. Перевірити `health/ready/metrics`.
+3. Викликати `nl-sql` і `rag/answer` на одному бізнес-питанні.
+4. Прогнати quality gate і показати risk/confidence у відповіді.
+

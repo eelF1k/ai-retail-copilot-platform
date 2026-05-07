@@ -1,116 +1,116 @@
 # AI Retail Copilot Platform
 
-Backend-first pet project tailored for the AI Developer role in retail.
+Backend-first pet-проєкт під роль AI Developer у ритейлі.
 
-## Goal
-Build an internal AI platform that helps retail teams:
-- answer operational and analytics questions with LLMs,
-- query PostgreSQL safely with grounded SQL flows,
-- reduce hallucinations with retrieval and validation layers,
-- run reliably in Docker and Kubernetes.
+## Мета
+Побудувати внутрішню AI-платформу, яка допомагає retail-командам:
+- відповідати на операційні та аналітичні питання через LLM,
+- безпечно працювати з PostgreSQL через перевірені SQL-потоки,
+- зменшувати галюцинації через retrieval і валідаційні шари,
+- стабільно працювати в Docker та Kubernetes.
 
-## Planned modules
-- `backend/app/api` - REST endpoints
-- `backend/app/core` - config and shared settings
+## Заплановані модулі
+- `backend/app/api` - REST ендпоінти
+- `backend/app/core` - конфігурація та спільні налаштування
 - `backend/app/services` - LLM, SQL, RAG, guardrails
-- `backend/app/db` - PostgreSQL integration
-- `backend/app/observability` - logs, metrics, tracing hooks
-- `docs/` - architecture and runbook
-- `infra/` - docker and k8s manifests
+- `backend/app/db` - інтеграція з PostgreSQL
+- `backend/app/observability` - логи, метрики, hooks для трасування
+- `docs/` - архітектура та runbook
+- `infra/` - docker і k8s маніфести
 
-## Stack (target)
+## Стек (цільовий)
 - Python, FastAPI, asyncio
 - PostgreSQL + SQLAlchemy
-- OpenAI/Claude-compatible adapters
+- OpenAI/Claude-compatible адаптери
 - Redis (cache/queue)
 - Docker Compose + Kubernetes
-- Prometheus metrics + structured logs
+- Prometheus метрики + structured logs
 
-## Roadmap (commit by commit)
-0. Init repository and architecture skeleton
-1. FastAPI scaffold + config + health endpoints
-2. PostgreSQL schema + seed + analytical SQL queries
-3. Safe SQL execution layer + guardrails
-4. LLM adapters + prompt templates
-5. NL-to-SQL endpoint + summarization
-6. RAG layer + citations
-7. Hallucination checks + confidence scoring
-8. Docker + docker-compose stack
-9. Kubernetes manifests
-10. Observability (metrics/logging)
-11. Tests (unit + integration + smoke)
+## Roadmap (коміт за комітом)
+0. Ініціалізація репозиторію та каркасу архітектури
+1. FastAPI scaffold + config + health ендпоінти
+2. PostgreSQL схема + seed + аналітичні SQL-запити
+3. Шар безпечного виконання SQL + guardrails
+4. LLM адаптери + prompt templates
+5. NL-to-SQL ендпоінт + summarization
+6. RAG шар + цитати
+7. Перевірки галюцинацій + confidence scoring
+8. Docker + docker-compose стек
+9. Kubernetes маніфести
+10. Observability (метрики/логування)
+11. Тести (unit + integration + smoke)
 12. CI/CD (GitHub Actions + gitlab-ci)
-13. Docs polish and runbook
+13. Полірування документації та runbook
 
-## Step 2 deliverables
-- PostgreSQL async layer (`SQLAlchemy + asyncpg`)
-- Sales/order-item schema for retail analytics
-- Seed script: `python scripts/seed_postgres.py`
-- Analytical endpoints:
+## Крок 2 (готово)
+- Async-шар PostgreSQL (`SQLAlchemy + asyncpg`)
+- Схема продажів/позицій замовлень для retail-аналітики
+- Seed-скрипт: `python scripts/seed_postgres.py`
+- Аналітичні ендпоінти:
   - `GET /api/v1/ops/revenue-by-store`
   - `GET /api/v1/ops/top-skus`
 
-## Step 3 deliverables
-- Safe SQL endpoint: `POST /api/v1/ops/safe-sql`
+## Крок 3 (готово)
+- Ендпоінт безпечного SQL: `POST /api/v1/ops/safe-sql`
 - Guardrails:
-  - only `SELECT`
-  - deny DDL/DML keywords
-  - allowlist of source tables
-  - enforced result row limit
+  - лише `SELECT`
+  - заборона DDL/DML ключових слів
+  - allowlist таблиць-джерел
+  - примусове обмеження кількості рядків
 
-## Step 4 deliverables
-- LLM adapters:
+## Крок 4 (готово)
+- LLM адаптери:
   - OpenAI-compatible chat completions
   - Claude messages API
   - mock provider fallback
-- Prompt templates for retail analyst tasks
-- Endpoint: `POST /api/v1/ops/prompt/run`
+- Prompt templates для retail analyst задач
+- Ендпоінт: `POST /api/v1/ops/prompt/run`
 
-## Step 5 deliverables
-- NL-to-SQL flow:
-  - question -> deterministic SQL translation
-  - SQL guardrails validation
-  - safe read-only execution
-  - LLM-based business summary
-- Endpoint: `POST /api/v1/ops/nl-sql`
+## Крок 5 (готово)
+- NL-to-SQL потік:
+  - питання -> deterministic SQL translation
+  - валідація SQL guardrails
+  - безпечне read-only виконання
+  - LLM-підсумок для бізнесу
+- Ендпоінт: `POST /api/v1/ops/nl-sql`
 
-## Step 6 deliverables
-- Local RAG retrieval layer over internal retail knowledge snippets
-- Citation-rich answer endpoint: `POST /api/v1/ops/rag/answer`
-- Source metadata in response (`source_id`, title, snippet)
+## Крок 6 (готово)
+- Локальний RAG retrieval над внутрішніми retail knowledge snippets
+- Ендпоінт відповіді з цитатами: `POST /api/v1/ops/rag/answer`
+- Метадані джерел у відповіді (`source_id`, title, snippet)
 
-## Step 7 deliverables
-- Hallucination checks for NL-SQL and RAG outputs
-- Confidence and grounding scores in API responses
-- Risk level flags (`low`, `medium`, `high`) with warning messages
+## Крок 7 (готово)
+- Перевірки галюцинацій для NL-SQL і RAG результатів
+- Confidence і grounding scores у відповідях API
+- Прапорці ризику (`low`, `medium`, `high`) з warning-повідомленнями
 
-## Step 8 deliverables
-- `backend/Dockerfile` for API container
-- `docker-compose.yml` stack:
+## Крок 8 (готово)
+- `backend/Dockerfile` для API контейнера
+- `docker-compose.yml` стек:
   - `api`
   - `postgres`
   - `redis`
-- `.env.example` for local environment setup
+- `.env.example` для локального налаштування середовища
 
-## Run with Docker
+## Запуск через Docker
 ```bash
 docker compose up --build
 ```
 
-## Quick checks
+## Швидкі перевірки
 - `GET /api/v1/health`
 - `GET /api/v1/ready`
 - `GET /api/v1/ops/revenue-by-store`
 - `POST /api/v1/ops/nl-sql`
 
-## Step 9 deliverables
-- Kubernetes manifests in `infra/k8s/`:
+## Крок 9 (готово)
+- Kubernetes маніфести в `infra/k8s/`:
   - `config.yaml` (ConfigMap + Secret)
   - `workloads.yaml` (Deployments: api, postgres, redis)
   - `services.yaml` (ClusterIP services)
   - `kustomization.yaml`
 
-## Run in Kubernetes (local cluster)
+## Запуск у Kubernetes (локальний кластер)
 ```bash
 kubectl apply -k infra/k8s
 kubectl get pods
@@ -118,53 +118,53 @@ kubectl get svc
 kubectl port-forward svc/api 8000:8000
 ```
 
-## Step 10 deliverables
+## Крок 10 (готово)
 - Structured request logging middleware
-- Prometheus metrics endpoint: `GET /api/v1/metrics`
-- Latency and error metrics for key ops endpoints
+- Ендпоінт метрик Prometheus: `GET /api/v1/metrics`
+- Метрики latency та errors для ключових ops-ендпоінтів
 
-## Step 11 deliverables
-- Extended API integration tests:
+## Крок 11 (готово)
+- Розширені API integration тести:
   - `tests/test_system_api.py`
   - `tests/test_safe_sql_api.py`
-- Smoke load utility:
+- Smoke load утиліта:
   - `python scripts/load_smoke.py --base-url http://127.0.0.1:8000 --requests 30 --concurrency 10`
 
-## Step 12 deliverables
+## Крок 12 (готово)
 - GitHub Actions pipeline: `.github/workflows/ci.yml`
 - GitLab CI pipeline: `gitlab-ci.yml`
-- Automated checks:
-  - tests
+- Автоматичні перевірки:
+  - тести
   - compile validation
   - docker image build
 
-## Step 13 deliverables
-- Documentation polish:
+## Крок 13 (готово)
+- Полірування документації:
   - `docs/architecture.md`
   - `docs/runbook.md`
   - `docs/api-examples.md`
   - `docs/troubleshooting.md`
 
-## Step 14 deliverables (advanced AI operations)
-- Multi-provider comparison endpoint:
+## Крок 14 (advanced AI operations)
+- Multi-provider comparison ендпоінт:
   - `POST /api/v1/ops/prompt/compare`
-  - compares outputs from `mock/openai/claude` for the same business task
-- Prompt evaluation script for real retail scenarios:
+  - порівнює відповіді `mock/openai/claude` для однієї бізнес-задачі
+- Скрипт prompt evaluation для реальних retail-сценаріїв:
   - `python scripts/prompt_eval.py --provider mock`
-- SQL performance tuning report script (based on PostgreSQL `EXPLAIN`):
+- Скрипт SQL performance tuning report (на базі PostgreSQL `EXPLAIN`):
   - `python scripts/sql_tune_report.py`
 
-## Step 15 deliverables (AI quality gate in CI)
-- Automated LLM quality gate script:
+## Крок 15 (AI quality gate в CI)
+- Автоматизований скрипт LLM quality gate:
   - `python scripts/llm_quality_gate.py --provider mock --min-avg-confidence 0.25 --max-high-risk 0`
-- CI integration:
-  - GitHub Actions runs gate in `.github/workflows/ci.yml`
-  - GitLab CI runs gate in `gitlab-ci.yml`
-- Gate policy:
-  - fail pipeline if average confidence drops below threshold
-  - fail pipeline if high-risk hallucination scenarios exceed limit
+- Інтеграція в CI:
+  - GitHub Actions запускає gate у `.github/workflows/ci.yml`
+  - GitLab CI запускає gate у `gitlab-ci.yml`
+- Політика gate:
+  - pipeline падає, якщо середній confidence нижче порогу
+  - pipeline падає, якщо кількість high-risk сценаріїв перевищує ліміт
 
-## Documentation index
+## Індекс документації
 - Architecture: `docs/architecture.md`
 - Runbook: `docs/runbook.md`
 - API examples: `docs/api-examples.md`

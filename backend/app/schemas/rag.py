@@ -17,4 +17,8 @@ class RAGResponse(BaseModel):
     answer: str
     citations: list[Citation]
     context_count: int
+    confidence: float
+    grounding_score: float
+    risk_level: str
+    warnings: list[str]
 

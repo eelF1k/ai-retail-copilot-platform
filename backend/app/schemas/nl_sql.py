@@ -13,4 +13,8 @@ class NL2SQLResponse(BaseModel):
     rows: list[dict]
     row_count: int
     summary: str
+    confidence: float
+    grounding_score: float
+    risk_level: str
+    warnings: list[str]
 

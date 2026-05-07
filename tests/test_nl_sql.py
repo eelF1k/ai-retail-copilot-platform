@@ -42,4 +42,6 @@ async def test_nl_sql_endpoint_flow(monkeypatch):
     assert payload["allowed"] is True
     assert payload["row_count"] == 1
     assert "VELMART_KYIV" in payload["summary"]
+    assert "confidence" in payload
+    assert "risk_level" in payload
 

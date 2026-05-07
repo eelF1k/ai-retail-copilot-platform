@@ -26,4 +26,6 @@ def test_rag_answer_returns_citations(monkeypatch):
     assert payload["context_count"] == 2
     assert len(payload["citations"]) == 2
     assert "answer" in payload
+    assert "confidence" in payload
+    assert "risk_level" in payload
 

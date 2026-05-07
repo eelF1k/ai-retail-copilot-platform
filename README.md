@@ -79,3 +79,8 @@ Build an internal AI platform that helps retail teams:
 - Citation-rich answer endpoint: `POST /api/v1/ops/rag/answer`
 - Source metadata in response (`source_id`, title, snippet)
 
+## Step 7 deliverables
+- Hallucination checks for NL-SQL and RAG outputs
+- Confidence and grounding scores in API responses
+- Risk level flags (`low`, `medium`, `high`) with warning messages
+

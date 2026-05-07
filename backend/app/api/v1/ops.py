@@ -7,7 +7,7 @@ from app.schemas.llm import PromptRunRequest, PromptRunResponse
 from app.schemas.nl_sql import NL2SQLRequest, NL2SQLResponse
 from app.schemas.rag import Citation, RAGRequest, RAGResponse
 from app.schemas.sql_guard import SQLQueryRequest, SQLQueryResponse
-from app.services import LLMService, NL2SQLService, retail_analyst_prompt
+from app.services import HallucinationGuard, LLMService, NL2SQLService, retail_analyst_prompt
 from app.services.sql_guard import SQLGuard
 from app.rag import KnowledgeRetriever
 
@@ -70,6 +70,10 @@ async def run_nl_to_sql(payload: NL2SQLRequest):
             rows=[],
             row_count=0,
             summary=f"Query blocked by guardrails: {reason}",
+            confidence=0.0,
+            grounding_score=0.0,
+            risk_level="high",
+            warnings=["SQL blocked by guardrails before execution."],
         )
 
     rows = await SafeSQLRepository().execute_select(sql=sql, max_rows=payload.max_rows)
@@ -80,6 +84,10 @@ async def run_nl_to_sql(payload: NL2SQLRequest):
         "Provide a short business summary in 3-5 bullet points."
     )
     llm_result = await LLMService().generate(prompt=summary_prompt, temperature=0.1)
+    guard_result = HallucinationGuard().evaluate(
+        answer=str(llm_result["output"]),
+        contexts=[json.dumps(row, ensure_ascii=True) for row in rows],
+    )
 
     return NL2SQLResponse(
         question=payload.question,
@@ -88,6 +96,10 @@ async def run_nl_to_sql(payload: NL2SQLRequest):
         rows=rows,
         row_count=len(rows),
         summary=str(llm_result["output"]),
+        confidence=float(guard_result["confidence"]),
+        grounding_score=float(guard_result["grounding_score"]),
+        risk_level=str(guard_result["risk_level"]),
+        warnings=list(guard_result["warnings"]),
     )
 
 
@@ -103,6 +115,10 @@ async def rag_answer(payload: RAGRequest):
         "Answer concisely, rely only on provided context, and mention key constraints."
     )
     llm_result = await LLMService().generate(prompt=prompt, temperature=0.1)
+    guard_result = HallucinationGuard().evaluate(
+        answer=str(llm_result["output"]),
+        contexts=[str(item["text"]) for item in contexts],
+    )
 
     citations = [
         Citation(
@@ -117,5 +133,9 @@ async def rag_answer(payload: RAGRequest):
         answer=str(llm_result["output"]),
         citations=citations,
         context_count=len(citations),
+        confidence=float(guard_result["confidence"]),
+        grounding_score=float(guard_result["grounding_score"]),
+        risk_level=str(guard_result["risk_level"]),
+        warnings=list(guard_result["warnings"]),
     )
 

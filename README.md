@@ -84,3 +84,22 @@ Build an internal AI platform that helps retail teams:
 - Confidence and grounding scores in API responses
 - Risk level flags (`low`, `medium`, `high`) with warning messages
 
+## Step 8 deliverables
+- `backend/Dockerfile` for API container
+- `docker-compose.yml` stack:
+  - `api`
+  - `postgres`
+  - `redis`
+- `.env.example` for local environment setup
+
+## Run with Docker
+```bash
+docker compose up --build
+```
+
+## Quick checks
+- `GET /api/v1/health`
+- `GET /api/v1/ready`
+- `GET /api/v1/ops/revenue-by-store`
+- `POST /api/v1/ops/nl-sql`
+
